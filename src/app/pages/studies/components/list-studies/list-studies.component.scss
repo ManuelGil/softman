@@ -1,0 +1,213 @@
+// List studies component styling using design system
+:root {
+  /* usa la variable global --color-primary si la tienes; fallback a #2780c2 */
+  --primary: var(--color-primary, #2780c2);
+  --primary-contrast: #ffffff;
+}
+
+// Card and header improvements
+.card {
+  border-color: var(--color-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+  color: var(--color-text);
+  font-weight: 600;
+
+  i {
+    color: var(--color-primary);
+  }
+}
+
+// Input and control improvements
+.input-group-text {
+  background-color: var(--color-bg-light);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.form-control,
+.form-select {
+  border-color: var(--color-border);
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(39, 128, 194, 0.25);
+  }
+}
+
+// Button improvements
+.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+
+  &:hover {
+    background-color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+  }
+}
+
+.btn-outline-primary {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+
+  &:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+}
+
+.btn-outline-secondary {
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+
+  &:hover {
+    background-color: var(--color-bg-light);
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+}
+
+// Table improvements
+.table {
+  th {
+    background-color: var(--color-bg-light) !important;
+    border-color: var(--color-border);
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  td {
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+
+  tr:hover td {
+    background-color: var(--color-bg-light);
+  }
+}
+
+// Loading and error states
+.spinner-border {
+  color: var(--color-primary);
+}
+
+.alert-danger {
+  background-color: rgba(185, 28, 28, 0.1);
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+// Badge improvements
+.badge {
+  &.bg-secondary {
+    background-color: var(--color-text-muted) !important;
+  }
+}
+
+// Pagination improvements
+.pagination {
+  .page-link {
+    color: var(--color-primary);
+    border-color: var(--color-border);
+
+    &:hover {
+      background-color: var(--color-bg-light);
+      border-color: var(--color-primary);
+    }
+  }
+
+  .page-item.active .page-link {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  .page-item.disabled .page-link {
+    color: var(--color-text-muted);
+    background-color: var(--color-bg-light);
+    border-color: var(--color-border);
+  }
+}
+
+// Responsive improvements
+@media (max-width: 768px) {
+  .row.g-2 {
+    gap: 0.75rem !important;
+  }
+
+  .col-md-4,
+  .col-md-3,
+  .col-md-2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .btn-group {
+    .btn-sm {
+      padding: 0.25rem 0.4rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  .table {
+    font-size: 0.9rem;
+
+    td {
+      padding: 0.5rem 0.25rem;
+    }
+  }
+}
+
+/* Badges con buen contraste (colores escogidos para accesibilidad AA) */
+.status-badge {
+  padding: 0.35em 0.6em;
+  font-size: 0.8rem;
+  border-radius: 0.5rem;
+  color: #fff;
+  display: inline-block;
+}
+
+/* Colores de estado con contraste suficiente */
+.badge-success {
+  background-color: #15803d;
+} /* verde (AA) */
+.badge-warning {
+  background-color: #b45309;
+} /* ámbar (AA) */
+.badge-info {
+  background-color: var(--primary);
+} /* primario */
+.badge-secondary {
+  background-color: #6b7280;
+}
+
+/* Botón 'Ver' estilo */
+.btn[title="Ver detalle"] {
+  background: transparent;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+}
+
+/* asegurar wrap en columnas largas */
+.table td.text-wrap {
+  white-space: normal;
+}
+
+/* focus visible (alto contraste con color primario) */
+.table a:focus,
+.btn:focus,
+.form-control:focus,
+.form-select:focus {
+  outline: 3px solid rgba(39, 128, 194, 0.18); /* semitransparente sobre primario #2780c2 */
+  outline-offset: 2px;
+}
+
+// Accessibility and motion
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .table tr {
+    transition: none !important;
+  }
+}

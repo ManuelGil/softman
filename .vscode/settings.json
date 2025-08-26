@@ -1,0 +1,4 @@
+{
+  "angular.components.standalone": false,
+  "angular.components.style": "scss"
+}

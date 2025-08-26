@@ -1,0 +1,83 @@
+@if (isLoading()) {
+  <!-- Loading State -->
+  <div class="d-flex justify-content-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando perfil...</span>
+    </div>
+  </div>
+} @else if (error()) {
+  <!-- Error State -->
+  <div class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    {{ error() }}
+    <button type="button" class="btn btn-outline-danger btn-sm ms-3" (click)="retry()">
+      <i class="bi bi-arrow-clockwise me-1"></i>Reintentar
+    </button>
+  </div>
+} @else if (currentUser()) {
+  <!-- Profile Content -->
+  <div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-transparent border-bottom">
+          <h2 class="card-title mb-0 d-flex align-items-center">
+            <i class="bi bi-person-circle me-3"></i>
+            Mi Perfil
+          </h2>
+        </div>
+        <div class="card-body p-4">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">Nombre completo</label>
+              <div class="form-control-plaintext fw-medium">{{ currentUser()?.fullName || 'No disponible' }}</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">Documento</label>
+              <div class="form-control-plaintext fw-medium">{{ currentUser()?.document || 'No disponible' }}</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">Email</label>
+              <div class="form-control-plaintext fw-medium">{{ currentUser()?.email || 'No disponible' }}</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">Rol</label>
+              <div class="form-control-plaintext fw-medium">
+                <span class="badge" [ngClass]="getRoleBadgeClass(currentUser()?.role?.name)">
+                  <i class="bi bi-person-fill me-1" aria-hidden="true"></i>
+                  {{ getRoleDisplayName(currentUser()?.role?.name) }}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">Estado de cuenta</label>
+              <div class="form-control-plaintext fw-medium">
+                <span class="badge" [ngClass]="currentUser()?.credentials?.active ? 'bg-success' : 'bg-danger'">
+                  <i class="bi bi-circle-fill me-1" aria-hidden="true"></i>
+                  {{ currentUser()?.credentials?.active ? 'Activa' : 'Inactiva' }}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted">Último acceso</label>
+              <div class="form-control-plaintext fw-medium">
+                <i class="bi bi-clock me-2 text-muted"></i>
+                {{ formatLastLogin(currentUser()?.credentials?.lastLogin) }}
+              </div>
+            </div>
+          </div>
+          <hr class="my-4">
+          <div class="d-flex gap-2 flex-wrap">
+            <button type="button" class="btn btn-primary" (click)="onEditProfile()">
+              <i class="bi bi-pencil-square me-2"></i>Editar Perfil
+            </button>
+            <button type="button" class="btn btn-outline-secondary" (click)="onChangePassword()">
+              <i class="bi bi-key me-2"></i>Cambiar Contraseña
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+}

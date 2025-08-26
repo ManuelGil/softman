@@ -1,0 +1,23 @@
+// Footer styling using design system
+.footer {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--color-border);
+  
+  a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.15s ease;
+    
+    &:hover {
+      color: var(--color-primary-light);
+      text-decoration: underline;
+    }
+  }
+  
+  .small {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+  }
+}

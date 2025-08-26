@@ -1,0 +1,93 @@
+<div
+  class="container d-flex flex-column justify-content-center align-items-center min-vh-100 py-5"
+>
+  <div
+    class="card shadow-lg border-0 rounded-lg mt-5 col-lg-5 col-md-7 col-sm-9"
+  >
+    <div class="card-header bg-primary text-white text-center py-4">
+      <h3 class="fw-bold mb-0">INICIAR SESIÓN</h3>
+    </div>
+    <div class="card-body p-4 p-md-5">
+      <form [formGroup]="loginForm" (ngSubmit)="submit()">
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            id="document"
+            name="document"
+            formControlName="document"
+            class="form-control"
+            [class.is-invalid]="form['document'].touched && form['document'].invalid"
+            placeholder="Documento"
+            inputmode="text"
+            autocomplete="username"
+            aria-describedby="documentHelp"
+            required
+          />
+          <label for="document">Documento</label>
+          <div id="documentHelp" class="form-text">Ingresa tu documento de identidad.</div>
+          <div class="invalid-feedback">
+            @if (form['document'].errors?.['required']) {
+              El documento es obligatorio.
+            } @else if (form['document'].errors?.['minlength']) {
+              El documento debe tener al menos 3 caracteres.
+            } @else if (form['document'].errors?.['maxlength']) {
+              El documento no puede exceder 100 caracteres.
+            }
+          </div>
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            formControlName="password"
+            class="form-control"
+            [class.is-invalid]="form['password'].touched && form['password'].invalid"
+            placeholder="Contraseña"
+            autocomplete="current-password"
+            required
+          />
+          <label for="password">Contraseña</label>
+          <div class="invalid-feedback">
+            @if (form['password'].errors?.['required']) {
+              La contraseña es obligatoria.
+            } @else if (form['password'].errors?.['minlength']) {
+              La contraseña debe tener al menos 3 caracteres.
+            } @else if (form['password'].errors?.['maxlength']) {
+              La contraseña no puede exceder 100 caracteres.
+            }
+          </div>
+        </div>
+        <!-- Mensaje de error -->
+        @if (loginError()) {
+          <div class="alert alert-danger" role="alert" aria-live="polite">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ loginError() }}
+          </div>
+        }
+        
+        <div class="d-grid gap-2 mt-4">
+          <button 
+            type="submit" 
+            class="btn btn-primary btn-lg" 
+            [disabled]="isLoading() || loginForm.invalid"
+            [attr.aria-busy]="isLoading() ? 'true' : 'false'"
+          >
+            @if (isLoading()) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Autenticando...
+            } @else {
+              Iniciar Sesión <i class="bi bi-arrow-right ms-2"></i>
+            }
+          </button>
+          <a
+            routerLink="/auth/register"
+            class="btn btn-outline-secondary btn-lg"
+          >
+            Registrar <i class="bi bi-person-plus ms-2"></i>
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+// Register form styling consistent with design system
+.card {
+  border-color: var(--color-border);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: var(--color-primary) !important;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  
+  &:hover {
+    background-color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+  }
+  
+  i {
+    transition: transform 0.2s ease;
+  }
+  
+  &:hover i {
+    transform: translateX(4px);
+  }
+}
+
+.btn-outline-secondary {
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+  
+  &:hover {
+    background-color: var(--color-bg-light);
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+}
+
+.form-control {
+  border-color: var(--color-border);
+  
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(39, 128, 194, 0.25);
+  }
+}
+
+// Accessibility and motion
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary i {
+    transition: none;
+  }
+}

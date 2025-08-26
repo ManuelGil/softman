@@ -1,0 +1,253 @@
+@if (isLoading()) {
+<!-- Loading State -->
+<div class="d-flex justify-content-center py-5">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Cargando estudios...</span>
+  </div>
+</div>
+} @else if (error()) {
+<!-- Error State -->
+<div class="alert alert-danger" role="alert">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+  {{ error() }}
+  <button
+    type="button"
+    class="btn btn-outline-danger btn-sm ms-3"
+    (click)="loadStudies()"
+  >
+    <i class="bi bi-arrow-clockwise me-1"></i>Reintentar
+  </button>
+</div>
+} @else {
+<!-- Main Content -->
+<div class="card mb-3">
+  <div class="card-body">
+    <!-- Welcome Header -->
+    <div class="mb-4 p-4 bg-gradient rounded-3" style="background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));">
+      <div class="text-white">
+        <h1 class="display-6 fw-bold mb-2">
+          <i class="bi bi-hospital me-3"></i>Lumier Digital RIS
+        </h1>
+        <p class="mb-0 fs-5 opacity-90">Sistema de Información Radiológica - Portal de Estudios</p>
+      </div>
+    </div>
+    
+    <!-- Header with title and actions -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="mb-0 d-flex align-items-center">
+        <i class="bi bi-clipboard-data me-3 text-primary"></i>
+        Estudios Médicos
+        <span class="badge bg-primary ms-3">{{
+          filteredStudies().length
+        }}</span>
+      </h2>
+      <div class="d-flex gap-2">
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-sm"
+          (click)="clearFilters()"
+          [disabled]="searchQuery() === '' && statusFilter() === 'all'"
+        >
+          <i class="bi bi-x-circle me-1"></i>Limpiar filtros
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm"
+          (click)="refresh()"
+        >
+          <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+        </button>
+      </div>
+    </div>
+
+    <!-- Filters row -->
+    <div class="row g-2 mb-4">
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-search"></i>
+          </span>
+          <input
+            class="form-control"
+            placeholder="Buscar por tipo, paciente, documento..."
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event); onSearchChange()"
+            aria-label="Buscar estudios"
+          />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <select
+          class="form-select"
+          [ngModel]="statusFilter()"
+          (ngModelChange)="changeStatusFilter($event)"
+          aria-label="Filtrar por estado"
+        >
+          <option value="all">Todos los estados</option>
+          @for (status of availableStatuses(); track status) {
+          <option [value]="status">{{ getStatusDisplayName(status) }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-3">
+        <button
+          type="button"
+          class="btn btn-outline-primary w-100"
+          (click)="toggleSort()"
+          [attr.aria-label]="
+            'Ordenar por fecha: ' +
+            (sortDirection() === 'asc' ? 'ascendente' : 'descendente')
+          "
+        >
+          @if (sortDirection() === 'desc') {
+          <i class="bi bi-sort-down me-2"></i>
+          } @else {
+          <i class="bi bi-sort-up me-2"></i>
+          } Fecha
+          {{
+            sortDirection() === "asc"
+              ? "(Antigua → Nueva)"
+              : "(Nueva → Antigua)"
+          }}
+        </button>
+      </div>
+      <div class="col-md-2 d-flex align-items-center">
+        <select
+          class="form-select"
+          [ngModel]="pageSize()"
+          (ngModelChange)="pageSize.set($event); currentPage.set(1)"
+        >
+          <option [value]="5">5 por página</option>
+          <option [value]="8">8 por página</option>
+          <option [value]="10">10 por página</option>
+          <option [value]="20">20 por página</option>
+        </select>
+      </div>
+    </div>
+
+    <div
+      class="table-responsive"
+      role="region"
+      aria-label="Historial de estudios"
+    >
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Paciente</th>
+            <th scope="col">Documento</th>
+            <th scope="col">Estado</th>
+            <th scope="col" class="text-end">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (study of paginatedStudies(); track study.id) {
+          <tr>
+            <td>{{ study.date | date : "mediumDate" : "" : "es-CO" }}</td>
+            <td class="text-wrap" style="max-width: 28ch">{{ study.type }}</td>
+            <td>{{ study.patientName }}</td>
+            <td>{{ study.patientId }}</td>
+            <td>
+              <span
+                class="badge status-badge"
+                [ngClass]="getStatusBadgeClass(study.status)"
+                [attr.aria-label]="'Estado: ' + study.status"
+                [title]="study.status"
+              >
+                <i
+                  [ngClass]="getStatusIcon(study.status)"
+                  class="me-1"
+                  aria-hidden="true"
+                ></i>
+                {{ getStatusDisplayName(study.status) }}
+              </span>
+            </td>
+            <td class="text-end">
+              <div
+                class="btn-group"
+                role="group"
+                aria-label="Acciones del estudio"
+              >
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm"
+                  title="Ver detalle del estudio"
+                  [attr.aria-label]="
+                    'Ver detalle del estudio de ' + study.patientName
+                  "
+                >
+                  <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  title="Descargar estudio"
+                  [attr.aria-label]="
+                    'Descargar estudio de ' + study.patientName
+                  "
+                  [disabled]="study.status !== 'ENTREGADO'"
+                >
+                  <i class="bi bi-download" aria-hidden="true"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="6" class="text-center py-5">
+              <div class="text-muted">
+                <i class="bi bi-search fs-1 d-block mb-3"></i>
+                <p class="mb-2">No se encontraron estudios</p>
+                <small>
+                  {{
+                    searchQuery() || statusFilter() !== "all"
+                      ? "Intenta ajustar los filtros de búsqueda"
+                      : "No hay estudios disponibles para mostrar"
+                  }}
+                </small>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPages() > 1) {
+    <!-- Paginación -->
+    <nav aria-label="Paginación de estudios">
+      <ul class="pagination justify-content-center my-2">
+        <li class="page-item" [class.disabled]="currentPage() === 1">
+          <button
+            class="page-link"
+            (click)="goToPage(currentPage() - 1)"
+            [attr.aria-disabled]="currentPage() === 1"
+          >
+            Anterior
+          </button>
+        </li>
+
+        @for (pageNum of visiblePages(); track pageNum) {
+        <li class="page-item" [class.active]="currentPage() === pageNum">
+          <button class="page-link" (click)="goToPage(pageNum)">
+            {{ pageNum }}
+          </button>
+        </li>
+        }
+
+        <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+          <button
+            class="page-link"
+            (click)="goToPage(currentPage() + 1)"
+            [attr.aria-disabled]="currentPage() === totalPages()"
+          >
+            Siguiente
+          </button>
+        </li>
+      </ul>
+    </nav>
+    }
+  </div>
+</div>
+}
