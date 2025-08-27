@@ -164,15 +164,15 @@ export class ListStudiesComponent implements OnInit, OnChanges {
   getStatusBadgeClass(status: string): string {
     switch (status) {
       case 'ENTREGADO':
-        return 'bg-success';
+        return 'badge-success';
       case 'EN ENTREGA RESULTADO':
       case 'EN VALIDACION':
-        return 'bg-warning';
+        return 'badge-warning';
       case 'EN DIAGNOSTICO':
       case 'EN ATENCION':
-        return 'bg-info';
+        return 'badge-info';
       default:
-        return 'bg-secondary';
+        return 'badge-secondary';
     }
   }
 
